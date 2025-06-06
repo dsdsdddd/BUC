@@ -1,28 +1,27 @@
 <<<<<<< HEAD
 # BUCM
 =======
-# Multi-view Depth Estimation with Uncertainty Constraints for Virtual-Real Occlusion                                                                                                                              
+# Monocular Depth Estimation Model Based on Uncertainty Constraints and Its Application in Augmented Reality                                                                                                                              
 
 ## Overview
 
-This repository contains the implementation of the multi-view depth estimation model proposed in the paper *"Multi-view Depth Estimation with Uncertainty Constraints for Virtual-Real Occlusion"* . The model addresses occlusion handling in Augmented Reality (AR) applications by improving depth estimation accuracy, particularly at object contours, using uncertainty constraints.
+This repository contains the implementation of the monocular depth estimation model based on uncertainty constraints proposed in the paper “Monocular Depth Estimation Model Based on Uncertainty Constraints and Its Application in Augmented Reality”. The model fuses single-view and multi-view depth estimation techniques to improve depth prediction accuracy and robustness in augmented reality (AR), especially enhancing occlusion handling at object edges through Bayesian uncertainty modeling.
 
 The model framework is shown in the figure：
 
-<img src="./media/2.jpg" alt="模型框架图" width="1000"/>
+<img src="./media/fig3.jpg" alt="模型框架图" width="1000"/>
 
 
 ### Key Features
 
-- **Bayesian Convolutional Uncertainty Estimation (BCUE)**: Enhances depth contour accuracy by modeling uncertainty in complex scenes.
-- **Attention Spatial Convolution Fusion (ASCF)**: Combines multi-head self-attention and spatial-channel reconstruction convolution to improve feature extraction.
-- **Depth Edge Padding (DEP)**: An optional post-processing module to refine depth map edges for better contour alignment.
-- **Datasets**: Evaluated on ScanNetV2 and 7Scenes, achieving superior performance in depth estimation and virtual-real occlusion tasks.
-
+- **Fusion of Single-view and Multi-view Depth Estimation**: Enhances multi-view depth cost volumes with features extracted from single-view encoders, substantially improving prediction accuracy in dynamic and complex scenes.
+- **Bayesian Convolutional Uncertainty Estimation (CBM)**: Introduces uncertainty constraints to better model depth uncertainty, improving robustness in occlusion regions.
+- **AR Assembly Training System**: Development of a mobile AR parts assembly training system that leverages the model to achieve precise virtual-real occlusion for interactive component assembly tasks.
+- **Datasets**: Validated on the ScanNet dataset, showing superior performance over several mainstream depth estimation methods and enabling high-precision virtual-real occlusion in AR.
 ### Experimental result diagram.
 
 - ** Depth estimation result diagram.**
-<img src="./media/1.jpg" alt="深度图" width="600"/>
+<img src="./media/fig5.jpg" alt="深度图" width="600"/>
 
 - ** Real-virtual occlusion effect diagram.**
 <img src="./media/9.jpg" alt="遮挡图" width="600"/>
@@ -35,19 +34,28 @@ The model framework is shown in the figure：
 
 The evaluation metrics for the depth estimation performance of our model on the ScanNet dataset are shown in the table below.
 
-| Methods | Abs Diff | ABS Rel | Sq Rel | \(\delta < 1.05\) | \(\delta < 1.25\) |
-|----------|----------|----------|----------|----------|----------|
-| Baseline | 0.0941 | 0.0457 | 0.0139 | 71.95 | 97.84 |
-| Ours(without DEP) | 0.0864 | 0.0422 | 0.0115 | 73.83 | 98.14 |
-| Ours | 0.0843 | 0.0395 | 0.0103 | 74.79 | 98.21 |
 
-The evaluation metrics for the depth estimation performance of our model on the 7Scenes dataset are shown in the table below.
+| Method                          | Type                     | Auxiliary         | AbsRel | RMSE  | δ₁   | δ₂   | δ₃   |
+|---------------------------------|--------------------------|-------------------|--------|-------|------|------|------|
+| Monodepth2 [Godard et al. 2019] | Single-View              | None              | 0.317  | 5.472 | 28.33| 47.41| 68.14|
+| Packnet [Guizilini et al. 2020] | Single-View              | Semantics         | 0.287  | 4.715 | 33.72| 52.17| 72.15|
+| CADepth [Yan et al. 2021]       | Single-View              | None              | 0.296  | 4.877 | 31.59| 51.35| 69.25|
+| FSREDepth [Choi et al. 2020]    | Single-View              | Semantics         | 0.243  | 4.269 | 37.46| 58.66| 77.34|
+| SC-depthV3 [Sun et al. 2023b]   | Single-View              | Pseudo Depth      | 0.227  | 3.871 | 43.57| 63.72| 84.97|
+| BaseBoostDepth [Saunders et al. 2024] | Single-View       | None              | 0.186  | 3.454 | 49.71| 69.85| 88.21|
+| DPSNet [Im et al. 2019]         | Multi-View               | None              | 0.080  | 2.991 | 49.36| 73.25| 93.27|
+| MVDepth [Wang and Shen 2018]    | Multi-View               | None              | 0.085  | 3.432 | 46.71| 70.21| 92.77|
+| DELTASS [Sinha et al. 2020]     | Multi-View               | None              | 0.079  | 2.767 | 48.64| 72.47| 93.78|
+| GPMVS [Hou et al. 2019]         | Multi-View               | None              | 0.076  | 2.925 | 51.04| 74.59| 93.96|
+| SimpleRecon [Sayed et al. 2022] | Multi-View               | Metadata          | 0.046  | 1.391 | 71.95| 83.65| 97.84|
+| Watson [Watson et al. 2023]     | Multi-View               | None              | 0.048  | 1.349 | 70.33| 81.48| 97.75|
+| Li et al. (2023a)               | Single & Multi-View      | None              | 0.057  | 1.812 | 68.74| 80.74| 95.25|
+| AFNet [Cheng et al. 2024]       | Single & Multi-View      | None              | 0.044  | 1.447 | 71.44| 83.21| 97.35|
+| Wang et al. (2024)             | Single & Multi-View      | Inertia           | 0.039  | 1.213 | 75.81| 87.69| 97.46|
+| **Ours (Multi-View Only)**      | Multi-View               | Confidence        | 0.042  | 1.151 | 74.79| 88.71| 98.21|
+| **Ours**                        | Single & Multi-View      | Confidence        | **0.035** | **1.002** | **77.38** | **90.25** | **98.41** |
 
-| Methods | Abs Diff | ABS Rel | Sq Rel | \(\delta < 1.05\) | \(\delta < 1.25\) |
-|----------|----------|----------|----------|----------|----------|
-| Baseline | 0.1045 | 0.0617 | 0.0175 | 57.30 | 97.02 |
-| Ours(without DEP) | 0.1104 | 0.0599 | 0.0170 | 60.45 | 96.62 |
-| Ours | 0.1095 | 0.0577 | 0.0161 | 61.03 | 96.94 |
+
   
 The model demonstrates excellent performance in depth estimation, effectively handling occlusion issues, and shows great potential for applications in augmented reality (AR) scenarios.
 
@@ -58,7 +66,6 @@ The model demonstrates excellent performance in depth estimation, effectively ha
 - Python 3.8+
 - Conda (Anaconda or Miniconda)
 - CUDA-enabled GPU (e.g., NVIDIA RTX3090)
-- Optional: Segment Anything Model (SAM) for DEP module.
 
 ### Setup
 
@@ -88,10 +95,10 @@ The model demonstrates excellent performance in depth estimation, effectively ha
    python -c "import torch; print(torch.__version__)"
    ```
 
-4. **Download and preprocess datasets** (ScanNetV2, 7Scenes):
+4. **Download and preprocess datasets** (ScanNetV2):
 
    Follow instructions in `data/README.md` to set up the datasets.
-   Please follow the instructions [here](https://github.com/ScanNet/ScanNet) to download the ScanNet dataset. This dataset is quite big (>2TB), so make sure you have enough space, especially for extracting files. Follow the instructions [here](https://www.microsoft.com/en-us/research/project/rgb-d-dataset-7-scenes/?msockid=0faa059eb12a673618d31147b0f86613) to download the 7Scenes dataset.
+   Please follow the instructions [here](https://github.com/ScanNet/ScanNet) to download the ScanNet dataset. This dataset is quite big (>2TB), so make sure you have enough space, especially for extracting files. 
 
 ## Training
 
@@ -189,8 +196,14 @@ CUDA_VISIBLE_DEVICES=0 python pc_fusion.py --name HERO_MODEL \
 
 Change `configs/data/scannet_dense_test.yaml` to `configs/data/scannet_default_test.yaml` to use keyframes only if you don't want to wait too long.
 
+
+## Augmented Reality Parts Assembly Training System
+The augmented reality system is developed using Unity3D, with EasyAR and OpenXR for augmented reality functionalities. The detailed process is described in the paper. You can access the virtual parts assembly system we developed via this link:https://pan.baidu.com/s/14JFzyMIO0pZoVglqojqp9A.Network disk extraction code:a5qq.
+
 ## Acknowledgements
 
-We would like to express our sincere gratitude to Liu Jia, Wang Bin, Chen Dapeng, Song Hong, Zhang Zengwei, and Huang Nanxuan from Nanjing University of Information Science and Technology for their invaluable support in both the code development and the paper. Their contributions have been crucial in advancing this project, and we greatly appreciate their guidance and collaboration.
+
+
+We would like to express our sincere gratitude to Liu Jia, Wang Bin, Chen Dapeng, Li Yong Ze, Gao Peng from Nanjing University of Information Science and Technology for their invaluable support in both the code development and the paper. Their contributions have been crucial in advancing this project, and we greatly appreciate their guidance and collaboration.
 
 >>>>>>> cce9ab7 (first commit)
