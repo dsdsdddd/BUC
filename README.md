@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# BUCM
+# BUC
 =======
 # Monocular Depth Estimation Model Based on Uncertainty Constraints and Its Application in Augmented Reality                                                                                                                              
 
